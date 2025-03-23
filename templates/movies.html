@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Movies - Movie Ticket Booking{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Available Movies</h1>
+
+<div class="row">
+    {% for movie in movies %}
+    <div class="col-md-4 mb-4">
+        <div class="card movie-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ movie[1] }}</h5>
+                <p class="card-text">
+                    <strong>Release Date:</strong> {{ movie[2] }}<br>
+                    <strong>Director:</strong> {{ movie[3] }}<br>
+                    <strong>Cast:</strong> {{ movie[4] }}<br>
+                    <strong>Rating:</strong> {{ movie[7] }}/10
+                </p>
+                <a href="{{ url_for('booking') }}" class="btn btn-primary">Book Now</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %} 

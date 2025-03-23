@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Movie Ticket Booking{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4 mb-4">Welcome to Movie Ticket Booking</h1>
+    <p class="lead mb-5">Book your favorite movies with just a few clicks!</p>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+            <div class="card movie-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">View Movies</h5>
+                    <p class="card-text">Browse our collection of latest movies</p>
+                    <a href="{{ url_for('movies') }}" class="btn btn-primary">View Movies</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card movie-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Book Tickets</h5>
+                    <p class="card-text">Book your movie tickets now</p>
+                    <a href="{{ url_for('booking') }}" class="btn btn-primary">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Book Tickets - Movie Ticket Booking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="mb-0">Book Movie Tickets</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="bookingForm">
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="user_name" name="user_name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="movie" class="form-label">Select Movie</label>
+                        <select class="form-select" id="movie" name="movie" required>
+                            <option value="">Choose a movie...</option>
+                            {% for movie in movies %}
+                            <option value="{{ movie[0] }}">{{ movie[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="theatre" class="form-label">Select Theatre</label>
+                        <select class="form-select" id="theatre" name="theatre" required>
+                            <option value="">Choose a theatre...</option>
+                            {% for theatre in theatres %}
+                            <option value="{{ theatre[0] }}">{{ theatre[1] }} - {{ theatre[2] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="show" class="form-label">Select Show</label>
+                        <select class="form-select" id="show" name="show" required disabled>
+                            <option value="">Choose a show time...</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tickets" class="form-label">Number of Tickets</label>
+                        <select class="form-select" id="tickets" name="tickets" required>
+                            {% for i in range(1, 11) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Book Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    function formatTime(timeStr) {
+        // Convert HH:MM:SS to HH:MM AM/PM format
+        const time = new Date('2000-01-01T' + timeStr);
+        return time.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+    }
+
+    function updateShows() {
+        const movieId = $('#movie').val();
+        const theatreId = $('#theatre').val();
+        const showSelect = $('#show');
+        
+        if (movieId && theatreId) {
+            showSelect.prop('disabled', true);
+            $.ajax({
+                url: '{{ url_for("get_shows") }}',
+                method: 'POST',
+                data: {
+                    movie_id: movieId,
+                    theatre_id: theatreId
+                },
+                success: function(shows) {
+                    showSelect.empty().append('<option value="">Choose a show time...</option>');
+                    shows.forEach(function(show) {
+                        const formattedTime = formatTime(show.time);
+                        showSelect.append(
+                            `<option value="${show.id}">${formattedTime} (${show.available_seats} seats available)</option>`
+                        );
+                    });
+                    showSelect.prop('disabled', false);
+                },
+                error: function() {
+                    showSelect.empty().append('<option value="">Error loading show times</option>');
+                    showSelect.prop('disabled', true);
+                }
+            });
+        } else {
+            showSelect.empty().append('<option value="">Choose a show time...</option>');
+            showSelect.prop('disabled', true);
+        }
+    }
+
+    $('#movie, #theatre').change(updateShows);
+});
+</script>
+{% endblock %} 
