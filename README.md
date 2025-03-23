@@ -7,6 +7,3 @@ A web application for booking movie tickets.
 - Select showtimes
 - Book tickets
 - View booking confirmation
-
-## Author
-Krishna Krishnakumar 
